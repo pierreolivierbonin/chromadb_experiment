@@ -1,28 +1,29 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
-build-backend = "setuptools.build_meta"
+requires = ['setuptools >= 61.0']
+build-backend = 'setuptools.build_meta'
 
 [project]
-name = "chromadb_experiment"
-dynamic = ["version"]
-authors = [{name="Pierre-Olivier Bonin", email="pierreolivier.bonin@hrsdc-rhdcc.gc.ca" }]
-description = "PoC for a ChromaDB vector database designed to work as part of a RAG architecture-based chatbot"
-readme = "README.md"
-requires-python = ">= 3.9"
+name = 'chromadb_experiment'
+dynamic = ['version']
+authors = [{name='Pierre-Olivier Bonin', email='pierreolivier.bonin@hrsdc-rhdcc.gc.ca'},
+{name='Author B', email='emailB@emailb.com'}]
+description = 'PoC for a ChromaDB vector database designed to work as part of a RAG architecture-based chatbot'
+readme = 'README.md'
+requires-python = '>= 3.10'
 dependencies = [
     'requests',
-    'chromadb==0.5.23',
-    'fastapi==0.115.6',
+    'chromadb',
+    'fastapi[standard]',
     'importlib-metadata',
     'more_itertools==10.5.0',
     'pydantic==2.10.3',
-    'pysqlite3-binary',
     'PyYAML==6.0.2',
     'Requests==2.32.3',
+    'sentencepiece',
     'sentence_transformers==3.3.1',
     'setuptools',
     'torch'
     ]
 
 [project.scripts]
-build_chroma = "utils.chromadb_utils.build_chroma_collection:main_cli"
+build_chroma = 'utils.chromadb_utils.build_chroma_collection:main_cli'
