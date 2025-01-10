@@ -23,10 +23,11 @@ passages = [
 ]
 
 # load model with tokenizer
-model = SentenceTransformer("jhu-clsp/FollowIR-7B", trust_remote_code=False)
+model = SentenceTransformer("multi-qa-mpnet-base-dot-v1", trust_remote_code=False)
 model.max_seq_length = 32768
 model.tokenizer.padding_side = "right"
 model.tokenizer.pad_token = model.tokenizer.eos_token
+print("EOS token: ", model.tokenizer.pad_token)
 
 
 def add_eos(input_examples, model):

@@ -8,7 +8,10 @@ import yaml
 
 @dataclass
 class FilesLoader:
-    """Reads paths, file names, opens and read the content of files to automatically detect the encoding of the data. Indicates whether the encoding found across all files within a directory is consistent. Stores all of the info above in class instance attributes."""
+    """Reads paths, file names, opens and read the content of files to automatically detect the encoding of the data. 
+    Indicates whether the encoding found across all files within a directory is consistent. 
+    Stores all of the info above in class instance attributes.
+    """
 
     config: dict
     extension: str

@@ -11,11 +11,15 @@ description = 'PoC for a ChromaDB vector database designed to work as part of a 
 readme = 'README.md'
 requires-python = '>= 3.10'
 dependencies = [
-    'requests',
+    'beautifulsoup4',
+    'chardet',
     'chromadb',
+    'docx',
     'fastapi[standard]',
     'importlib-metadata',
+    'lxml',
     'more_itertools==10.5.0',
+    'pandas',
     'pydantic==2.10.3',
     'PyYAML==6.0.2',
     'Requests==2.32.3',
