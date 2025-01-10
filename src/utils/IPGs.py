@@ -10,7 +10,7 @@ class HTMLTablestoDataframes:
 
     def __post_init__(self):
         html_content = requests.get(self.url)
-        self.df_list = pd.read_html(StringIO(html_content.text))
+        self.df_list = read_html(StringIO(html_content.text))
 
 
 @dataclass
@@ -92,4 +92,5 @@ if __name__ == "__main__":
     # save to dataframe, then save file for reusability (preparing for transfer into ChromaDB)
     cols = ["Number", "Name", "Text"]
     df = pd.DataFrame(preprocessed_IPGs)
-    df.to_csv("IPGs_Labour_standards.csv", index=False)
+    print(df)
+    # df.to_csv("IPGs_Labour_standards.csv", index=False)
