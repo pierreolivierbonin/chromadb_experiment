@@ -93,4 +93,4 @@ if __name__ == "__main__":
     cols = ["Number", "Name", "Text"]
     df = pd.DataFrame(preprocessed_IPGs)
     print(df)
-    # df.to_csv("IPGs_Labour_standards.csv", index=False)
+    # df.to_csv("../../data/IPGs_Labour_standards.csv", index=False)

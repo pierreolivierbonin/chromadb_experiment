@@ -1,4 +1,4 @@
-# inspiration: https://huggingface.co/nvidia/NV-Embed-v2
+# initial inspiration: https://huggingface.co/nvidia/NV-Embed-v2
 import chromadb
 from chromadb.utils import embedding_functions
 import numpy as np
