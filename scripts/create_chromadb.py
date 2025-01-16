@@ -1,6 +1,8 @@
 import chromadb
+import streamlit as st
+from streamlit_chromadb_connection.chromadb_connection import ChromadbConnection
 
-client = chromadb.PersistentClient(path="chroma")
+client = chromadb.PersistentClient(path="./chroma/")
 collection = client.get_or_create_collection("first_collection")
 
 collection.add(
@@ -18,3 +20,17 @@ results = collection.query(
     n_results=2,  # how many results to return
 )
 print(results)
+
+
+configuration = {
+    "client": "PersistentClient",
+    "path": "./chroma"
+}
+
+collection_name = "first_collection"
+
+conn = st.connection("chromadb",
+                     type=ChromadbConnection,
+                     **configuration)
+documents_collection_df = conn.get_collection_data(collection_name)
+st.dataframe(documents_collection_df)

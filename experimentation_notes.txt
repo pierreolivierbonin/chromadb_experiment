@@ -1,0 +1,6 @@
+The bitsandbytes library (https://huggingface.co/docs/bitsandbytes/main/en/index) is quite useful to reduce memory consumption for LLMs 
+via k-bit quantization for PyTorch. Unfortunately, it has Windows compatibility issues which are still not quite resolved officially.
+
+Potential solutions:
+Users have found workaround documented here: https://github.com/bitsandbytes-foundation/bitsandbytes/issues/30
+And another user has offered a custom adapted wheel to build the library here: https://github.com/jllllll/bitsandbytes-windows-webui 
