@@ -1,7 +1,6 @@
 from io import StringIO
 
 from dataclasses import dataclass
-from pandas import read_html
 import requests
 
 from utils.htmltables_converter import HTMLTablestoDataframes
@@ -86,4 +85,5 @@ if __name__ == "__main__":
     cols = ["Number", "Name", "Text"]
     df = pd.DataFrame(preprocessed_IPGs)
     print(df)
+    print(df.text)
     # df.to_csv("../../data/IPGs_Labour_standards.csv", index=False)

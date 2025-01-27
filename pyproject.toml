@@ -8,7 +8,7 @@ dynamic = ['version']
 authors = [{name='Pierre-Olivier Bonin', email='pierreolivier.bonin@hotmail.com'}]
 description = 'PoC for a ChromaDB vector database designed to work as part of a RAG architecture-based chatbot'
 readme = 'README.md'
-requires-python = '>= 3.10'
+requires-python = '== 3.10'
 dependencies = [
     'beautifulsoup4',
     'chardet',
@@ -20,7 +20,6 @@ dependencies = [
     'more_itertools==10.5.0',
     'pandas',
     'pydantic==2.10.3',
-    'pysqlite3-binary',
     'PyYAML==6.0.2',
     'Requests==2.32.3',
     'sentencepiece',
