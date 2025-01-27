@@ -1,5 +1,5 @@
 # Retrieval-Augmented Generation (RAG) Database Preprocessor
-This project builds a vector database leveraging ChromaDB as a component of a Retrieval-Augmented Generation (RAG)-based chatbot/agent.
+This project helps you preprocess data to build a vector database leveraging ChromaDB for use cases like Retrieval-Augmented Generation (RAG)-based chatbots/agents.
 
 ## Table of Contents
 - [Installation](#installation)
