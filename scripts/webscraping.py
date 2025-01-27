@@ -6,7 +6,7 @@ import pandas as pd
 import re
 import requests
 
-from utils.IPGs import GenericIPG
+from utils.IPGs_example import GenericIPG
 
 
 with open("./data/LS_IPGs.txt", "r", encoding="utf-8") as tsv_file:
