@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 
-client = chromadb.PersistentClient(path="./chromadb_example/")
+client = chromadb.PersistentClient(path="../chromadb_directory")
 sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="multi-qa-mpnet-base-dot-v1")
 collection = client.get_or_create_collection("Labour_Standards_IPGs_Jan312025", embedding_function=sentence_transformer_ef)
 
@@ -45,7 +45,7 @@ def add_eos(input_examples, model):
     return input_examples
 
 
-# get the embeddings
+# get the embeddings for the query + the documents
 batch_size = 1
 query_embeddings = model.encode(
     add_eos(queries, model),
@@ -92,8 +92,9 @@ queries = [
 results = collection.query(
     query_texts=queries,        # Chroma will embed this for you
     n_results=3,                # how many results to return
-    include=["metadatas", "distances", "documents"]
+    include=["metadatas", "distances", "documents", "embeddings"]
 )
 
 print(results.items()) # this works well
+print("hello")
 
