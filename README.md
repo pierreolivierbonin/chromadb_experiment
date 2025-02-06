@@ -1,6 +1,10 @@
 # Retrieval-Augmented Generation (RAG) Database Preprocessor
 This project helps you preprocess data to build a vector database leveraging ChromaDB for use cases like Retrieval-Augmented Generation (RAG)-based chatbots/agents.
 
+## Built With
+* [Chroma](https://www.trychroma.com/)
+* [SentenceTransformers](https://sbert.net/)
+
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
@@ -18,8 +22,8 @@ Follow the three steps below:
 
 ## Usage
 Use the modules included in src/utils to preprocess your documents. For example:
-* if you have .docx documents, use *docx_processor.py* to transform your Word documents to plain text format files (.txt);
-* if you want to parse HTML tables, use *htmltables_converter.py* to transform them into dataframes and save the output into .csv files. 
+* if you have .docx documents, use `docx_processor.py` to transform your Word documents to plain text format files (.txt);
+* if you want to parse HTML tables, use `htmltables_converter.py` to transform them into dataframes and save the output into .csv files. 
 > See *scripts/IPGs_example.py* for an example, which uses *HTMLTablestoDataframes* to output a clean dataframe from an HTML table found on a webpage.
 
 > See *create_database_with_specific_embeddings.py* for an example on how to use the `chromadb` and `sentence-transformers` libraries to create embeddings, and then save a local vector database that you can reuse in any of your use cases.
