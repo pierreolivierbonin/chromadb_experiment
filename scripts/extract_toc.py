@@ -77,18 +77,26 @@ def get_main_toc_links(base_url: str, root_name: str) -> list[TocItem]:
 def extract_page_text(soup, url):
     parsed_url = urlparse(url)
     if parsed_url.fragment:
-        # Look for the section header with the matching fragment id.
-        section_header = soup.find(["h4", "h2", "h3"], id=parsed_url.fragment)
+        header_tags = ["h1", "h2", "h3", "h4", "h5", "h6"]
+
+        # Look for the section header with the matching fragment id
+        section_header = soup.find(header_tags, id=parsed_url.fragment)
         if not section_header:
             print(f"Section with ID '{parsed_url.fragment}' not found in {url}.")
             return ""
         
-        # Start with the header's text.
+        # Check if the header is within a <header> tag
+        parent_header = section_header.find_parent('header')
+        if parent_header:
+            section_header = parent_header
+        
+        # Start with the header's text
         extracted_text = section_header.get_text(separator="\n", strip=True)
 
-        # Grab subsequent siblings up to the next <hX>.
+        # Grab subsequent siblings up to the next <hX>
         for sibling in section_header.find_next_siblings():
-            if sibling.name in ["h2", "h3", "h4"]:
+            # Include all siblings if in a <header> tag section (Ex : Schedule I)
+            if sibling.name in header_tags and parent_header is None:
                 break
             extracted_text += "\n" + sibling.get_text(separator="\n", strip=True)
 
@@ -99,7 +107,7 @@ def extract_page_text(soup, url):
     else:
         return None
 
-def process_toc_page(toc_url, full_page_url, file_name, root_name):
+def process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section_number_prefix = ""):
     print("Fetching table of contents links...")
     toc_items = get_main_toc_links(toc_url, root_name)
     print(f"Found {len(toc_items)} leaf links.")
@@ -117,7 +125,8 @@ def process_toc_page(toc_url, full_page_url, file_name, root_name):
     # Open the CSV file for writing.
     with open(f"outputs/{file_name}.csv", "w", newline="", encoding="utf-8") as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["Title", "Section Number", "Hierarchy", "URL", "Text"])
+        csv_writer.writerow(["ID", "Title", "Section Number", "Hierarchy", "Hyperlink", "Text"])
+        empty_section_nb = 1
         
         for toc_item in toc_items:
             url = requests.compat.urljoin(full_page_url, toc_item.link_url)
@@ -128,7 +137,14 @@ def process_toc_page(toc_url, full_page_url, file_name, root_name):
                 print(f"No text found for {url}")
                 continue
 
-            csv_writer.writerow([toc_item.title, toc_item.section_number, toc_item.hierarchy, url, text])
+            id_prefix = file_name.upper() + "-"
+            if toc_item.section_number:
+                id_text = f"{id_prefix}{toc_item.section_number}"
+            else:
+                id_text = f"{id_prefix}{empty_section_number_prefix}_{empty_section_nb}"
+                empty_section_nb += 1
+
+            csv_writer.writerow([id_text, toc_item.title, toc_item.section_number, toc_item.hierarchy, url, text])
 
 if __name__ == "__main__":
     documents = [
@@ -136,15 +152,17 @@ if __name__ == "__main__":
             "https://laws-lois.justice.gc.ca/eng/acts/l-2/",
             "https://laws-lois.justice.gc.ca/eng/acts/l-2/FullText.html",
             "clc",
-            "Canada Labour Code"
+            "Canada Labour Code",
+            ""
         ),
         (
             "https://laws-lois.justice.gc.ca/eng/regulations/C.R.C.,_c._986",
             "https://laws-lois.justice.gc.ca/eng/regulations/C.R.C.,_c._986/FullText.html", 
             "clsr",
-            "Canada Labour Standards Regulations"
+            "Canada Labour Standards Regulations",
+            "SCHEDULE"
         )
     ]
 
-    for toc_url, full_page_url, file_name, root_name in documents:
-        process_toc_page(toc_url, full_page_url, file_name, root_name)
+    for toc_url, full_page_url, file_name, root_name, empty_section_number_prefix in documents:
+        process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section_number_prefix)
