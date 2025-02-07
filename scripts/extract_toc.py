@@ -140,7 +140,7 @@ def process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section
             if toc_item.section_number:
                 id_text = f"{id_prefix}{toc_item.section_number}"
             else:
-                id_text = f"{id_prefix}{empty_section_number_prefix}_{empty_section_nb}"
+                id_text = f"{id_prefix}{empty_section_number_prefix}-{empty_section_nb}"
                 empty_section_nb += 1
 
             csv_writer.writerow([id_text, toc_item.title, toc_item.section_number, toc_item.hierarchy, url, text])
