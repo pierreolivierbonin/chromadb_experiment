@@ -124,7 +124,7 @@ def process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section
     # Open the CSV file for writing.
     with open(f"outputs/{file_name}.csv", "w", newline="", encoding="utf-8") as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["id", "title", "section_number", "hierarchy", "url", "text"])
+        csv_writer.writerow(["id", "title", "section_number", "hierarchy", "hyperlink", "text"])
         empty_section_nb = 1
 
         for toc_item in toc_items:
