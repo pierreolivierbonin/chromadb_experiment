@@ -5,3 +5,4 @@ chroma.log
 data
 src/chromadb_experiment*
 config/HF_token.txt
+outputs
