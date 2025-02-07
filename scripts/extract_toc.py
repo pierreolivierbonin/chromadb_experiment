@@ -11,7 +11,7 @@ It writes each leaf section's title, section number, hierarchy, URL and text as 
 """
 
 import csv
-import time
+import os
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -163,6 +163,9 @@ if __name__ == "__main__":
             "SCHEDULE"
         )
     ]
+
+    # Create outputs directory if it doesn't exist
+    os.makedirs("outputs", exist_ok=True)
 
     for toc_url, full_page_url, file_name, root_name, empty_section_number_prefix in documents:
         process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section_number_prefix)
