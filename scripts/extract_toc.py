@@ -41,10 +41,9 @@ def parse_toc_items(ul, current_hierarchy, base_url, root_name) -> list[TocItem]
         span_tag = li.find("span", class_="sectionRange")
 
         if span_tag:
-            m = re.match(r'\s*(\d+)', span_tag.get_text(strip=True))
-            if m:
-                section_number = m.group(1)
-        
+            span_text = span_tag.get_text(strip=True)
+            section_number = span_text.split("-")[0].strip().replace(".", "-")
+
         # Check if this <li> has children
         child_ul = li.find("ul", recursive=False)
         if child_ul:
@@ -125,9 +124,9 @@ def process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section
     # Open the CSV file for writing.
     with open(f"outputs/{file_name}.csv", "w", newline="", encoding="utf-8") as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["ID", "Title", "Section Number", "Hierarchy", "Hyperlink", "Text"])
+        csv_writer.writerow(["id", "title", "section_number", "hierarchy", "url", "text"])
         empty_section_nb = 1
-        
+
         for toc_item in toc_items:
             url = requests.compat.urljoin(full_page_url, toc_item.link_url)
             print(f"Processing: {toc_item.title} - {url} (Section Number: {toc_item.section_number}, Hierarchy: {toc_item.hierarchy})")
