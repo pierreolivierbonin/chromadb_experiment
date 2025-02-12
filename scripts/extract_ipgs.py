@@ -20,33 +20,39 @@ from utils.page_utils import Page, extract_main_content
 MAX_WORKERS = 10
 BASE_URL = "https://www.canada.ca"
 
-def process_ipg_page(url: str, title: str, ipg_id: str, hierarchy: str) -> Optional[Page]:
+class IPG:
+    def __init__(self, title: str, url: str, id: str, table_title: str):
+        self.title = title
+        self.url = url
+        self.id = id
+        self.table_title = table_title
+
+def process_ipg_page(ipg: IPG) -> Optional[Page]:
     try:
-        full_url = urljoin(BASE_URL, url)
+        full_url = urljoin(BASE_URL, ipg.url)
         response = requests.get(full_url, timeout=10)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
         text, linked_pages = extract_main_content(soup)
 
-        print(f"Processed IPG: {title} - {full_url} (Hierarchy: {hierarchy})")
+        print(f"Processed IPG: {ipg.title} - {full_url} (Hierarchy: {ipg.table_title})")
         
-        # Create Page object with empty url_hierarchy and the linked_pages from extract_main_content
         return Page(
-            title=title,
+            title=ipg.title,
             url=full_url,
-            hierarchy=[hierarchy],  # Pass as list since Page joins it
-            url_hierarchy=[],      # Empty list since we don't extract url hierarchy
+            hierarchy=[ipg.table_title],
+            url_hierarchy=[],
             linked_pages=linked_pages,
             text=text,
-            id=ipg_id
+            id=ipg.id
         )
     
     except Exception as e:
-        print(f"Error processing {url}: {e}")
+        print(f"Error processing {ipg.url}: {e}")
         return None
 
-def extract_ipgs_from_table(table) -> List[tuple]:
+def extract_ipgs_from_table(table) -> List[IPG]:
     ipgs = []
     
     # Find table title (usually in a caption or preceding h2/h3)
@@ -67,10 +73,7 @@ def extract_ipgs_from_table(table) -> List[tuple]:
     
     # Process each row
     for row in table.find_all('tr')[1:]:  # Skip header row
-        cells = row.find_all(['td', 'th'])
-        if len(cells) <= max(title_idx, number_idx):
-            continue
-            
+        cells = row.find_all('td')
         title_cell = cells[title_idx]
         number_cell = cells[number_idx]
         
@@ -84,7 +87,7 @@ def extract_ipgs_from_table(table) -> List[tuple]:
         ipg_id = number_cell.get_text(strip=True)
         
         if url and title and ipg_id:
-            ipgs.append((title, url, ipg_id, table_title))
+            ipgs.append(IPG(title, url, ipg_id, table_title))
     
     return ipgs
 
@@ -120,8 +123,8 @@ def main():
     processed_pages = []
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         future_to_ipg = {
-            executor.submit(process_ipg_page, url, title, ipg_id, hierarchy): (title, url, ipg_id, hierarchy) 
-            for title, url, ipg_id, hierarchy in all_ipgs
+            executor.submit(process_ipg_page, ipg): ipg 
+            for ipg in all_ipgs
         }
         
         for future in future_to_ipg:

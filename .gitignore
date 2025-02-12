@@ -7,3 +7,4 @@ data
 src/chromadb_experiment*
 config
 outputs
+__pycache__
