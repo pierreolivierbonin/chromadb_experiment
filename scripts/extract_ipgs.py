@@ -7,15 +7,13 @@ For each IPG it:
   - Saves all IPG data to a CSV file
 """
 
-import csv
-import os
 import requests
 from bs4 import BeautifulSoup
 from typing import List, Optional
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urljoin
 
-from utils.page_utils import Page, extract_main_content
+from utils.page_utils import Page, extract_main_content, save_to_csv
 
 MAX_WORKERS = 10
 BASE_URL = "https://www.canada.ca"
@@ -91,18 +89,6 @@ def extract_ipgs_from_table(table) -> List[IPG]:
     
     return ipgs
 
-def save_to_csv(pages: List[Page]):
-    os.makedirs("outputs", exist_ok=True)
-    csv_path = f"outputs/ipgs.csv"
-    
-    with open(csv_path, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow(['id', 'title', 'hyperlink', 'hierarchy', 'url_hierarchy', 'linked_pages', 'text'])
-        for page in pages:
-            writer.writerow([page.id, page.title, page.url,page.hierarchy, page.url_hierarchy, page.linked_pages, page.text])
-
-    print(f"Saved {len(pages)} IPGs to {csv_path}")
-
 def main():
     # Fetch main IPG page
     response = requests.get("https://www.canada.ca/en/employment-social-development/programs/laws-regulations/labour/interpretations-policies.html")
@@ -132,7 +118,7 @@ def main():
             if page:
                 processed_pages.append(page)
     
-    save_to_csv(processed_pages)
+    save_to_csv(processed_pages, "ipgs.csv")
 
 if __name__ == "__main__":
     main()

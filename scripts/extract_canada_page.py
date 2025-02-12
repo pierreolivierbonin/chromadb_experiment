@@ -8,14 +8,12 @@ For each page it:
   - Saves the page data to a CSV if it doesn't already exist
 """
 
-import csv
-import os
 import requests
 from bs4 import BeautifulSoup
 from typing import List, Tuple
 from concurrent.futures import ThreadPoolExecutor
 
-from utils.page_utils import Page, extract_main_content
+from utils.page_utils import Page, extract_main_content, save_to_csv
 
 MAX_BATCH_SIZE = 10
 BASE_URL = "https://www.canada.ca"
@@ -43,20 +41,6 @@ def extract_title(soup) -> str:
     if h1:
         return h1.get_text(strip=True)
     return ""
-
-# Save the page to CSV
-def save_to_csv(pages: List[Page]):
-    os.makedirs("outputs", exist_ok=True)
-    csv_path = f"outputs/pages.csv" # include timestamp in the filename
-    
-    # Append the new row
-    with open(csv_path, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow(['id', 'title', 'hyperlink', 'hierarchy', 'url_hierarchy', 'linked_pages', 'text'])
-        for page in pages:
-            writer.writerow([page.id, page.title, page.url, page.hierarchy, page.url_hierarchy, page.linked_pages, page.text])
-
-    print(f"Saved {len(pages)} pages to {csv_path}")
 
 # Extract links from table of contents (Steps)
 def extract_toc_links(soup) -> List[str]:
@@ -160,4 +144,4 @@ if __name__ == "__main__":
 
         all_processed_pages.extend(processed_pages)
 
-    save_to_csv(all_processed_pages)
+    save_to_csv(all_processed_pages, "pages.csv")
