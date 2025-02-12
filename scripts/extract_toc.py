@@ -25,7 +25,7 @@ class TocItem:
         self.hierarchy = hierarchy
 
 # Recursively process a TOC element.
-def parse_toc_items(ul, current_hierarchy, base_url, root_name) -> list[TocItem]:
+def parse_toc_items(ul, current_hierarchy, base_url) -> list[TocItem]:
     items = []
     for li in ul.find_all("li", recursive=False):
         # Get the first link in this <li>
@@ -47,11 +47,10 @@ def parse_toc_items(ul, current_hierarchy, base_url, root_name) -> list[TocItem]
         # Check if this <li> has children
         child_ul = li.find("ul", recursive=False)
         if child_ul:
-            # Build new hierarchy; skip adding the topmost node "Canada Labour Code"
             new_hierarchy = list(current_hierarchy)
-            if title != root_name:
-                new_hierarchy.append(title)
-            child_items = parse_toc_items(child_ul, new_hierarchy, base_url, root_name)
+            new_hierarchy.append(title)
+
+            child_items = parse_toc_items(child_ul, new_hierarchy, base_url)
             items.extend(child_items)
         else:
             hierarchy_str = " / ".join(current_hierarchy)
@@ -63,13 +62,13 @@ def parse_toc_items(ul, current_hierarchy, base_url, root_name) -> list[TocItem]
     return items
 
 # Fetch the main Labour Code page and parse the table-of-contents recursively.
-def get_main_toc_links(base_url: str, root_name: str) -> list[TocItem]:
+def get_main_toc_links(base_url: str) -> list[TocItem]:
     response = requests.get(base_url, timeout=10)
     response.raise_for_status()
     soup = BeautifulSoup(response.content, 'html.parser')
     
     toc = soup.find('ul', class_='TocIndent')
-    toc_items = parse_toc_items(toc, [], base_url, root_name)
+    toc_items = parse_toc_items(toc, [], base_url)
     return toc_items
 
 # Given a candidate section URL, download and extract the text content for that specific section.
@@ -106,9 +105,9 @@ def extract_page_text(soup, url):
     else:
         return None
 
-def process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section_number_prefix = ""):
+def process_toc_page(toc_url, full_page_url, file_name, empty_section_number_prefix = ""):
     print("Fetching table of contents links...")
-    toc_items = get_main_toc_links(toc_url, root_name)
+    toc_items = get_main_toc_links(toc_url)
     print(f"Found {len(toc_items)} leaf links.")
     soup = None
 
@@ -151,14 +150,12 @@ if __name__ == "__main__":
             "https://laws-lois.justice.gc.ca/eng/acts/l-2/",
             "https://laws-lois.justice.gc.ca/eng/acts/l-2/FullText.html",
             "clc",
-            "Canada Labour Code",
             ""
         ),
         (
             "https://laws-lois.justice.gc.ca/eng/regulations/C.R.C.,_c._986",
             "https://laws-lois.justice.gc.ca/eng/regulations/C.R.C.,_c._986/FullText.html", 
             "clsr",
-            "Canada Labour Standards Regulations",
             "SCHEDULE"
         )
     ]
@@ -166,5 +163,5 @@ if __name__ == "__main__":
     # Create outputs directory if it doesn't exist
     os.makedirs("outputs", exist_ok=True)
 
-    for toc_url, full_page_url, file_name, root_name, empty_section_number_prefix in documents:
-        process_toc_page(toc_url, full_page_url, file_name, root_name, empty_section_number_prefix)
+    for toc_url, full_page_url, file_name, empty_section_number_prefix in documents:
+        process_toc_page(toc_url, full_page_url, file_name, empty_section_number_prefix)
