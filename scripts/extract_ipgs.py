@@ -12,18 +12,19 @@ from bs4 import BeautifulSoup
 from typing import List, Optional
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urljoin
+from dataclasses import dataclass
 
 from utils.page_utils import Page, extract_main_content, save_to_csv
 
 MAX_WORKERS = 10
 BASE_URL = "https://www.canada.ca"
 
+@dataclass
 class IPG:
-    def __init__(self, title: str, url: str, id: str, table_title: str):
-        self.title = title
-        self.url = url
-        self.id = id
-        self.table_title = table_title
+    title: str
+    url: str
+    id: str
+    table_title: str
 
 def process_ipg_page(ipg: IPG) -> Optional[Page]:
     try:
