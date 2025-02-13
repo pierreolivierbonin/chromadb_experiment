@@ -81,7 +81,7 @@ def process_page(url: str, current_depth: int, skip_toc: bool = False):
         hierarchy, url_hierarchy = extract_hierarchy(soup)
         text, linked_pages = extract_main_content(soup)
 
-        page = Page(title, url, hierarchy, url_hierarchy, linked_pages, text)
+        page = Page(None, title, url, hierarchy, url_hierarchy, linked_pages, text)
         current_processed_pages.append(page)
         
         # Process linked pages if depth allows

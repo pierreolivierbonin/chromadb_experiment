@@ -38,13 +38,13 @@ def process_ipg_page(ipg: IPG) -> Optional[Page]:
         print(f"Processed IPG: {ipg.title} - {full_url} (Hierarchy: {ipg.table_title})")
         
         return Page(
-            title=ipg.title,
-            url=full_url,
-            hierarchy=[ipg.table_title],
-            url_hierarchy=[],
-            linked_pages=linked_pages,
-            text=text,
-            id=ipg.id
+            ipg.id,
+            ipg.title,
+            full_url,
+            [ipg.table_title],
+            [],
+            linked_pages,
+            text
         )
     
     except Exception as e:

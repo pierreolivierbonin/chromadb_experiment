@@ -1,16 +1,20 @@
 from typing import Tuple, List
 import os
 import csv
+from dataclasses import dataclass
 
+@dataclass
 class Page:
-    def __init__(self, title: str, url: str, hierarchy: List[str], url_hierarchy: List[str], linked_pages: List[str], text: str, id: str = None):
-        self.id = id # will be set later if not provided
-        self.title = title
-        self.url = url
-        self.hierarchy = " / ".join(hierarchy)
-        self.url_hierarchy = " / ".join(url_hierarchy)
-        self.linked_pages = "|".join(linked_pages) if linked_pages else ""
-        self.text = text
+    id: str
+    title: str
+    url: str
+    hierarchy: List[str]
+    url_hierarchy: List[str]
+    linked_pages: List[str]
+    text: str
+
+    def get_csv_row(self):
+        return [self.id, self.title, self.url, " / ".join(self.hierarchy), " / ".join(self.url_hierarchy), "|".join(self.linked_pages) if self.linked_pages else "", self.text]
         
 def extract_main_content(soup) -> Tuple[str, List[str]]:
     main_content = soup.find('main')
@@ -37,6 +41,6 @@ def save_to_csv(pages: List[Page], filename: str):
         writer = csv.writer(f)
         writer.writerow(['id', 'title', 'hyperlink', 'hierarchy', 'url_hierarchy', 'linked_pages', 'text'])
         for page in pages:
-            writer.writerow([page.id, page.title, page.url,page.hierarchy, page.url_hierarchy, page.linked_pages, page.text])
+            writer.writerow(page.get_csv_row())
 
     print(f"Saved {len(pages)} pages to {csv_path}")
