@@ -5,10 +5,11 @@ build-backend = 'setuptools.build_meta'
 [project]
 name = 'chromadb_experiment'
 dynamic = ['version']
-authors = [{name='Pierre-Olivier Bonin', email='pierreolivier.bonin@hotmail.com'}]
+authors = [{name='Pierre-Olivier Bonin', email='pierreolivier.bonin@hotmail.com'},
+            {name='Marc-André Allard', email='marca116@hotmail.com'}]
 description = 'PoC for a ChromaDB vector database designed to work as part of a RAG architecture-based chatbot'
 readme = 'README.md'
-requires-python = '== 3.12.8'
+requires-python = '== 3.10'
 dependencies = [
     'beautifulsoup4',
     'chardet',
