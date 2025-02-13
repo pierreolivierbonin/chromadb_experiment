@@ -12,9 +12,6 @@ class Page:
     url_hierarchy: List[str]
     linked_pages: List[str]
     text: str
-
-    def __post_init__(self):
-        self.full_row = [self.id, self.title, self.url, " / ".join(self.hierarchy), " / ".join(self.url_hierarchy), "|".join(self.linked_pages) if self.linked_pages else "", self.text]
         
 def extract_main_content(soup) -> Tuple[str, List[str]]:
     main_content = soup.find('main')
@@ -33,6 +30,9 @@ def extract_main_content(soup) -> Tuple[str, List[str]]:
     
     return text_content, list(linked_pages)
 
+def get_page_csv_row(page: Page) -> List[str]:
+    return [page.id, page.title, page.url, " / ".join(page.hierarchy), " / ".join(page.url_hierarchy), "|".join(page.linked_pages) if page.linked_pages else "", page.text]
+
 def save_to_csv(pages: List[Page], filename: str):
     os.makedirs("outputs", exist_ok=True)
     csv_path = f"outputs/{filename}"
@@ -46,7 +46,7 @@ def save_to_csv(pages: List[Page], filename: str):
                 # Throw an error, not supposed to happen
                 raise ValueError(f"Page {page.id} already exists in {csv_path}")
             
-            writer.writerow(page.full_row)
+            writer.writerow(get_page_csv_row(page))
             existing_page_ids.append(page.id)
 
     print(f"Saved {len(pages)} pages to {csv_path}")
