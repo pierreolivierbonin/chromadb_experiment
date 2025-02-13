@@ -36,11 +36,17 @@ def extract_main_content(soup) -> Tuple[str, List[str]]:
 def save_to_csv(pages: List[Page], filename: str):
     os.makedirs("outputs", exist_ok=True)
     csv_path = f"outputs/{filename}"
+    existing_page_ids = []
     
     with open(csv_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['id', 'title', 'hyperlink', 'hierarchy', 'url_hierarchy', 'linked_pages', 'text'])
         for page in pages:
+            if page.id in existing_page_ids:
+                # Throw an error, not supposed to happen
+                raise ValueError(f"Page {page.id} already exists in {csv_path}")
+            
             writer.writerow(page.get_csv_row())
+            existing_page_ids.append(page.id)
 
     print(f"Saved {len(pages)} pages to {csv_path}")

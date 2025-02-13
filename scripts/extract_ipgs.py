@@ -19,6 +19,8 @@ from utils.page_utils import Page, extract_main_content, save_to_csv
 MAX_WORKERS = 10
 BASE_URL = "https://www.canada.ca"
 
+PROCESSED_IPG_IDS = []
+
 @dataclass
 class IPG:
     title: str
@@ -84,9 +86,14 @@ def extract_ipgs_from_table(table) -> List[IPG]:
         title = title_cell.get_text(strip=True)
         url = link.get('href')
         ipg_id = number_cell.get_text(strip=True)
+
+        if ipg_id in PROCESSED_IPG_IDS:
+            print(f"Skipping duplicate IPG: {ipg_id}")
+            continue
         
         if url and title and ipg_id:
             ipgs.append(IPG(title, url, ipg_id, table_title))
+            PROCESSED_IPG_IDS.append(ipg_id)
     
     return ipgs
 
