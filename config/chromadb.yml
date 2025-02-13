@@ -1,3 +1,0 @@
-CHROMA_DATA_PATH: "chroma/"
-EMBED_MODEL: "all-MiniLM-L6-v2"
-COLLECTION_NAME: "demo_docs"

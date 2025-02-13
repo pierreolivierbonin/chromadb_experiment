@@ -18,7 +18,7 @@ Follow the three steps below:
 0. *(optional)* install [`uv`](https://github.com/astral-sh/uv) by running `pip install uv` to use the fastest Python package and project manager.
 1. create a virtual environment by runnning `python -m venv .venv`
 2. activate the newly-created venv by running `./.venv/scripts/activate`
-3. install all required dependencies by running `uv pip install .` This will leverage *pyproject.toml* to build everything.
+3. install all required dependencies by running `uv pip install -e .` This will leverage *pyproject.toml* to build everything (in editable mode with the -e flag).
 
 ## Usage
 Use the modules included in src/utils to preprocess your documents. For example:
