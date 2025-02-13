@@ -8,3 +8,4 @@ src/chromadb_experiment*
 config
 outputs
 __pycache__
+notebooks
