@@ -123,14 +123,18 @@ if __name__ == "__main__":
     pages_to_process = [
         ("LABOUR", "https://www.canada.ca/en/employment-social-development/corporate/portfolio/labour.html"),
         ("WORKPLACE", "https://www.canada.ca/en/services/jobs/workplace.html"),
-        ("LABOUR-REPORTS", "https://www.canada.ca/en/employment-social-development/corporate/portfolio/labour/programs/labour-standards/reports.html")
+        ("LABOUR-REPORTS", "https://www.canada.ca/en/employment-social-development/corporate/portfolio/labour/programs/labour-standards/reports.html"),
+        ("LABOUR-STANDARDS", "https://www.canada.ca/en/services/jobs/workplace/federal-labour-standards.html"),
+        ("COMPENSATION", "https://www.canada.ca/en/services/jobs/workplace/health-safety/compensation.html"),
+        ("HEALTH-SAFETY", "https://www.canada.ca/en/services/jobs/workplace/health-safety.html")
     ]
     
     # Initialize PROCESSED_LINKS with starting pages
     PROCESSED_LINKS = set(pages_to_process)
 
     BLACKLIST_ROOT_URLS = set([
-        "/en/news/"
+        "/en/news/",
+        "/en/employment-social-development/programs/laws-regulations/labour/interpretations-policies.html"
     ])
 
     all_processed_pages = []
